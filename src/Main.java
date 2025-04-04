@@ -8,8 +8,8 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         try {
-            // get dimensions through user input
-            System.out.println("Enter dimensions of matrix A (format: row,column)");
+            // get dimensions through user input for matrix A
+            System.out.print("Matrix A: ");
             String tmp = scanner.nextLine();
 
             // extracting integers from the input
@@ -17,31 +17,32 @@ public class Main {
             rowsA = Integer.parseInt(dimensions[0].trim());
             colsA = Integer.parseInt(dimensions[1].trim());
 
-            System.out.println("Enter dimensions of matrix B (format: row,column)");
+            // declare matrix A according to user input
+            int[][] matrixA = new int[rowsA][colsA];
+
+            // input for matrix A
+            matrixInput(matrixA, rowsA, colsA, scanner);
+
+            // get dimensions through user input for matrix B
+            System.out.print("\nMatrix B: ");
             tmp = scanner.nextLine();
 
             dimensions = tmp.split(",");
             rowsB = Integer.parseInt(dimensions[0].trim());
             colsB = Integer.parseInt(dimensions[1].trim());
 
+            int[][] matrixB = new int[rowsB][colsB];
+
+            // input for matrix B
+            matrixInput(matrixB, rowsB, colsB, scanner);
+
             // validating dimensions, only valid when number of columns in matrix 1 is equal to rows in matrix 2
             if (colsA != rowsB) {
-                System.out.println("BAD REQUEST: the provided dimensions can not be multiplied");
+                System.out.println("BAD REQUEST: the provided dimensions can not be multiplied, exiting program.");
                 return;
             }
 
-            // declare matrices according to user input
-            int[][] matrixA = new int[rowsA][colsA];
-            int[][] matrixB = new int[rowsB][colsB];
             int[][] matrixC = new int[rowsA][colsB]; // A(n,m) * B(m,p) = C(n,p)
-
-            // input for matrix A
-            System.out.println("Matrix A:");
-            matrixInput(matrixA, rowsA, colsA, scanner);
-
-            // input for matrix B
-            System.out.println("Matrix B:");
-            matrixInput(matrixB, rowsB, colsB, scanner);
 
             // initialise matrixC with zeros
             initMatrixWithZeros(matrixC, rowsA, colsB);
@@ -50,25 +51,29 @@ public class Main {
             calculate(matrixA, matrixB, matrixC, rowsA, colsA, colsB);
 
             // displaying the result matrix
-            System.out.println("Matrix C: ");
+            System.out.println("\nMatrix C: ");
             displayMatrix(matrixC, rowsA, colsB);
 
         } catch (Exception e) {
-            System.out.println("ERROR: Something went wrong");
+            System.out.println("ERROR: Something went wrong, exiting program.");
         }
     }
 
     public static void matrixInput(int[][] matrix, int rows, int cols, Scanner scanner) {
-        int counter_row;
-        int counter_col;
+        String temp;
+        String[] row_extracted;
 
-        System.out.println("--------");
         for (int i = 0; i < rows; i++) {
-            counter_row = i + 1;
+            temp = scanner.nextLine();
+            row_extracted = temp.split("\\s+");
+
+            if (row_extracted.length != cols) {
+                System.out.println("ERROR: Number of columns mismatch, exiting program.");
+                return;
+            }
+
             for (int j = 0; j < cols; j++) {
-                counter_col = j + 1;
-                System.out.println("Enter value for row" + counter_row + " column " + counter_col);
-                matrix[i][j] = scanner.nextInt();
+                matrix[i][j] = Integer.parseInt(row_extracted[j]);
             }
         }
     }
